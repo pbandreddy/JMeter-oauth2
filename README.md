@@ -2,7 +2,7 @@
   <div class="content">
     <div class="header">
       <div class="col-xs-12 breadcrumb-padding">
-        <a href="#">How to Spider a Site With JMeter</a>
+        <h2>How to Spider a Site With JMeter</h2>
       </div>
       <div>
         <div class="content-html">
