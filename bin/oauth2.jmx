@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="2.6" jmeter="2.11 r1554548">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="OAuth 2" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="applicationName" elementType="Argument">
+            <stringProp name="Argument.name">applicationName</stringProp>
+            <stringProp name="Argument.value">My Project 1/1.0</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="serviceAccountEmail" elementType="Argument">
+            <stringProp name="Argument.name">serviceAccountEmail</stringProp>
+            <stringProp name="Argument.value">617177976539-67frl7vibj83qp0dg2hmk4fffi20pjeb@developer.gserviceaccount.com</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="p12FilePath" elementType="Argument">
+            <stringProp name="Argument.name">p12FilePath</stringProp>
+            <stringProp name="Argument.value">key.p12</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="activityId" elementType="Argument">
+            <stringProp name="Argument.name">activityId</stringProp>
+            <stringProp name="Argument.value">z12gtjhq3qn2xxl2o224exwiqruvtda0i</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </Arguments>
+      <hashTree/>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="OAuth2" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1415104259000</longProp>
+        <longProp name="ThreadGroup.end_time">1415104259000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="OAuth2 Sampler" enabled="true">
+          <stringProp name="cacheKey"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.plus.Plus;
+import com.google.api.services.plus.PlusScopes;
+import com.google.api.services.plus.model.Activity;
+
+
+String APPLICATION_NAME = vars.get(&quot;applicationName&quot;);
+String SERVICE_ACCOUNT_EMAIL = vars.get(&quot;serviceAccountEmail&quot;);
+JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+
+
+HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+GoogleCredential credential = new GoogleCredential.Builder().setTransport(httpTransport)
+	.setJsonFactory(JSON_FACTORY)
+	.setServiceAccountId(SERVICE_ACCOUNT_EMAIL)
+	.setServiceAccountScopes(Collections.singleton(PlusScopes.PLUS_ME))
+	.setServiceAccountPrivateKeyFromP12File(new File(vars.get(&quot;p12FilePath&quot;)))
+	.build();
+
+Plus plus = new Plus.Builder(httpTransport, JSON_FACTORY, credential)
+	.setApplicationName(APPLICATION_NAME).build();
+
+
+String activityId = vars.get(&quot;activityId&quot;);
+Activity activity = plus.activities().get(activityId).execute();
+log.info(&quot;id: &quot; + activity.getId());
+log.info(&quot;url: &quot; + activity.getUrl());
+log.info(&quot;content: &quot; + activity.getObject().getContent());
+</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+      </hashTree>
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
